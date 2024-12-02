@@ -111,21 +111,21 @@ class Sistema {
                 String cidade = extractValueFromJson(json, "localidade");
                 String estado = extractValueFromJson(json, "uf");
 
-                // Verifica se o retorno da API é válido
+              
                 if (logradouro == null) {
                     System.out.println("CEP não encontrado.");
                     return null;
                 }
 
-                // Cria o objeto Endereco a partir do JSON
+       
                 return new Endereco(cep, logradouro, "", bairro, cidade, estado);
             } else {
                 System.out.println("Erro na consulta ao ViaCEP. Status code: " + response.statusCode());
-                return null; // Retorna nulo se houver um erro
+                return null;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return null; // Retorna nulo em caso de exceção
+            return null;
         }
     }
 
@@ -176,7 +176,7 @@ class Sistema {
         restaurantes.add(r3);
         restaurantes.add(r4);
 
-        // Fluxo principal
+        
         while (true) {
             System.out.println("\n--- Sistema de Pedidos ---");
             listarRestaurantes();
@@ -210,7 +210,7 @@ class Sistema {
 
                 pedido.adicionarProduto(restauranteSelecionado.produtos.get(escolhaProduto));
 
-                // Pergunta sobre acompanhamentos
+                
                 System.out.print("Deseja acompanhamentos? (sim/não): ");
                 String desejaAcompanhamentos = scanner.next();
                 if (desejaAcompanhamentos.equalsIgnoreCase("sim")) {
@@ -242,13 +242,13 @@ class Sistema {
                     }
                 }
 
-                // Pergunta se deseja ir para o carrinho ou continuar comprando
+            
                 System.out.print("Deseja ir para o carrinho? (sim/não): ");
                 String irParaCarrinho = scanner.next();
                 if (irParaCarrinho.equalsIgnoreCase("sim")) {
-                    break; // Sai do loop para ir para o carrinho
+                    break; 
                 } else {
-                    adicionarMaisProdutos = true; // Continua adicionando produtos
+                    adicionarMaisProdutos = true;
                 }
             }
 
@@ -258,15 +258,14 @@ class Sistema {
             Endereco endereco = consultarCep(cep);
             if (endereco == null) {
                 System.out.println("Endereço não encontrado. Tente novamente.");
-                continue; // Retorna ao início do loop se o endereço não for encontrado
+                continue; 
             }
             System.out.print("Digite o número: ");
             String numero = scanner.next();
-            endereco.numero = numero; // Atualiza o número no objeto Endereco
+            endereco.numero = numero; 
 
             pedido.endereco = endereco;
 
-            // Listar formas de pagamento
             System.out.println("\n--- Formas de Pagamento ---");
             System.out.println("1. Cartão");
             System.out.println("2. Dinheiro");
@@ -280,51 +279,45 @@ class Sistema {
 
             pedido.formaPagamento = (formaPagamento == 1) ? "Cartão" : "Dinheiro";
 
-            // Imprimir confirmações antes da finalização
             System.out.printf("\nValor total: R$ %.2f\n", pedido.calcularValorTotal());
             System.out.println("Endereço fornecido: " + pedido.endereco.logradouro + ", " + pedido.endereco.numero + ", " + pedido.endereco.bairro + ", " + pedido.endereco.cidade + ", " + pedido.endereco.estado);
             System.out.println("Forma de pagamento: " + pedido.formaPagamento);
 
-            // Perguntar se o usuário deseja adicionar mais pedidos
             System.out.print("Deseja seguir para a confirmação? (sim/não): ");
             String adicionarMaisPedidos = scanner.next();
             if (adicionarMaisPedidos.equalsIgnoreCase("não")) {
-                continue; // Retorna à tela de seleção de restaurantes
+                continue; 
             }
 
-            // Finalizar pedido
             pedidosRealizados.add(pedido);
             System.out.println("\nPedido finalizado!");
 
-            // Atualizar status do pedido
             new Thread(() -> {
                 try {
                     System.out.println("Status do pedido: Em produção");
-                    Thread.sleep(10000); // Simula tempo de produção
+                    Thread.sleep(10000); 
                     System.out.println("Status do pedido: Saiu para entrega");
-                    Thread.sleep(6000); // Simula tempo de entrega
+                    Thread.sleep(6000); 
                     System.out.println("Status do pedido: Entregue");
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }).start();
 
-            // Listar pedidos realizados
             System.out.println("\n--- Pedidos Realizados ---");
             for (Pedido p : pedidosRealizados) {
                 System.out.printf("Pedido com %d produtos e %d acompanhamentos, Endereço: %s, %s, %s, %s, Forma de pagamento: %s\n", 
                                   p.produtos.size(), p.acompanhamentos.size(), p.endereco.logradouro, p.endereco.numero, p.endereco.bairro, p.endereco.cidade, p.formaPagamento);
             }
 
-            // Perguntar se o usuário deseja fazer outro pedido
             System.out.print("Deseja fazer outro pedido? (sim/não): ");
             String novoPedido = scanner.next();
             if (novoPedido.equalsIgnoreCase("não")) {
-                break; // Sai do loop se o usuário não quiser fazer outro pedido
+                break;
             }
         }
 
-        scanner.close(); // Fecha o scanner ao final do uso
+        scanner.close();
         System.out.println("Obrigado por usar o sistema de pedidos!");
     }
 
